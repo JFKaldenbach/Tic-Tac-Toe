@@ -1,0 +1,225 @@
+// @use 'node_modules/@material/floating-label/mdc-floating-label';
+// @use 'node_modules/@material/line-ripple/mdc-line-ripple';
+// @use 'node_modules/@material/notched-outline/mdc-notched-outline';
+// @use 'node_modules/@material/textfield';
+
+// @include textfield.core-styles;
+
+$min-width: 15vh;
+$max-width: 30vw;
+
+$background-color: #eee;
+$primary-color: #2d2d2d;
+$primary-font: 'Roboto', sans-serif;
+$green: #2e7d32;
+$blue: #20479b;
+$white: #fff;
+$grey: #0000001f;
+$darkgrey: #00000042;
+
+$game--cell-width: $min-width;
+$game--cell-max-width: $max-width;
+$game--gap: 5px;
+$game--cell-font-size: min($min-width, $max-width);
+
+$content--width: calc(3 * min($min-width, $max-width) + 2 * $game--gap);
+
+$game--cell-background: #eee;
+$game--grid-color: $primary-color;
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  color: $primary-color;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-size: clamp(1rem, 2.5vmin, 1.5rem);
+  align-items: center;
+  align-content: center;
+  font-family: $primary-font;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+.menu {
+  display: flex;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  align-content: space-between;
+
+  a {
+    margin: 0px 10px;
+    color: $primary-color;
+  }
+
+  > div {
+    width: calc(100vw / 3);
+    display: flex;
+  }
+
+  .menu-left {
+    justify-content: flex-start;
+  }
+
+  .title {
+    justify-content: center;
+    left: 0;
+    right: 0;
+  }
+  .menu-right {
+    justify-content: flex-end;
+  }
+}
+
+.content {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: $content--width;
+
+  > * {
+    margin: 30px 0px;
+  }
+
+  .game--status:after {
+    font-family: 'Material Icons';
+  }
+
+  .game--status.x:after {
+    content: 'close';
+    color: $green;
+    vertical-align: bottom;
+  }
+
+  .game--status.o:after {
+    content: 'radio_button_unchecked';
+    color: $blue;
+    vertical-align: bottom;
+  }
+
+  ol li {
+    padding: 10px 0px;
+  }
+}
+
+.game--grid {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  gap: $game--gap;
+  grid-template-columns: repeat(3, auto);
+  background-color: $primary-color;
+
+  .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $game--cell-background;
+    width: $game--cell-width;
+    height: $game--cell-width;
+    max-width: $game--cell-max-width;
+    max-height: $game--cell-max-width;
+    cursor: pointer;
+  }
+
+  .cell.x:before {
+    font-family: 'Material Icons';
+    content: 'close';
+    color: $green;
+    font-size: $game--cell-font-size;
+  }
+
+  .cell.o:before {
+    font-family: 'Material Icons';
+    content: 'radio_button_unchecked';
+    color: $blue;
+    font-size: calc($game--cell-font-size * 0.7);
+  }
+}
+
+button {
+  font-family: $primary-font;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  border: none;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  letter-spacing: 0.09em;
+  padding: 10px 16px;
+  background-color: $green;
+  color: $white;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+    0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+
+  span {
+    text-decoration: none;
+  }
+}
+
+button.restart {
+  display: flex;
+  border-radius: 100%;
+  font-size: 1em;
+  text-transform: none;
+  height: auto;
+  padding: 16px;
+
+  &:before {
+    font-family: 'Material Icons';
+    content: 'replay';
+  }
+
+  &:hover {
+    transition-duration: 1s;
+    transform: rotate(-360deg);
+  }
+}
+
+button.restart.inactive {
+  background-color: $grey;
+  color: $darkgrey;
+  cursor: default;
+
+  &:hover {
+    transform: none;
+  }
+}
+
+button.back {
+  &:before {
+    font-family: 'Material Icons';
+    content: 'arrow_back';
+    text-transform: none;
+    padding-right: 10px;
+  }
+}
+.footer {
+  display: flex;
+  font-size: 0.8em;
+  padding: 1em;
+}
