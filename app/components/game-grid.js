@@ -1,13 +1,27 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { A } from '@ember/array';
 
 export default class GameGridComponent extends Component {
-  @tracked currentPlayer = 'x';
+  @tracked nowPlaying = 'x';
   @tracked grid = new Array(9).fill('');
+  @tracked status = `Current turn:`;
+  @tracked gameActive = true;
+  // @tracked grid = A([]);
+  // @tracked grid = ['x']
 
   @action click() {
     const cell = event.target;
+    const statusElement = document.getElementsByClassName('game--status');
+    // Start new game if clicked when previous game had been completed
+    if (!this.gameActive) {
+      this.nowPlaying = 'x';
+      this.grid = new Array(9).fill('');
+      this.status = `Current turn:`;
+      this.gameActive = true;
+    }
+
     // Return if clicked element isn't a cell
     if (!cell.classList.contains('cell')) return;
 
@@ -27,8 +41,9 @@ export default class GameGridComponent extends Component {
     ];
 
     // Display x/o in clicked cell
-    cell.classList.add(this.currentPlayer);
-    this.grid[cell.dataset.cellId] = this.currentPlayer;
+    cell.classList.add(this.nowPlaying);
+    this.grid[cell.dataset.cellId] = this.nowPlaying;
+    console.log(this.grid);
 
     // Check win
     for (let i = 0; i < winConditions.length; i++) {
@@ -40,16 +55,23 @@ export default class GameGridComponent extends Component {
         continue;
       }
       if (cellA === cellB && cellB === cellC) {
-        console.log(`${this.currentPlayer} won!`);
+        console.log(`${this.nowPlaying} won!`);
+        this.status = `The winner is`;
+        this.gameActive = false;
       }
     }
 
     // Check draw
-    // if (!this.grid.includes('')) console.log('Its a draw babes');
+    if (!this.gameActive) return;
+
+    if (!this.grid.includes('')) {
+      this.status = `It's a draw babes`;
+      this.nowPlaying = 'draw';
+      this.gameActive = false;
+      return;
+    }
 
     // Switch to next player
-    this.currentPlayer === 'x'
-      ? (this.currentPlayer = 'o')
-      : (this.currentPlayer = 'x');
+    this.nowPlaying === 'x' ? (this.nowPlaying = 'o') : (this.nowPlaying = 'x');
   }
 }

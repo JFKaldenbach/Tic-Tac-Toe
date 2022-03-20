@@ -1,6 +1,7 @@
-<h2 class='game--status {{this.currentPlayer}}'>Current turn: </h2>
+<h2 class='game--status {{this.nowPlaying}}'>{{this.status}} </h2>
 
 <div class='game--grid' {{on 'click' this.click}}>
+  {{!-- <div data-cell-id='0' class='cell {{this.grid[0]}}'></div> --}}
   <div data-cell-id='0' class='cell'></div>
   <div data-cell-id='1' class='cell'></div>
   <div data-cell-id='2' class='cell'></div>
