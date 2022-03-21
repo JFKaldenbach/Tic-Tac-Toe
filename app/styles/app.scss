@@ -13,6 +13,8 @@ $primary-color: #2d2d2d;
 $primary-font: 'Roboto', sans-serif;
 $green: #2e7d32;
 $blue: #20479b;
+$light-green: #2e7d327a;
+$light-blue: #20479b5d;
 $white: #fff;
 $grey: #0000001f;
 $darkgrey: #00000042;
@@ -73,7 +75,7 @@ a {
   }
 
   > div {
-    width: calc(100vw / 3);
+    width: 15%;
     display: flex;
   }
 
@@ -83,6 +85,7 @@ a {
 
   .title {
     justify-content: center;
+    width: 70%;
     left: 0;
     right: 0;
   }
@@ -103,6 +106,9 @@ a {
     margin: 30px 0px;
   }
 
+  .game--status {
+    text-align: center;
+  }
   .game--status:after {
     font-family: 'Material Icons';
   }
@@ -119,8 +125,12 @@ a {
     vertical-align: bottom;
   }
 
-  ol li {
-    padding: 10px 0px;
+  ol {
+    padding: 1em;
+
+    li {
+      padding: 10px 0px;
+    }
   }
 }
 
@@ -132,6 +142,28 @@ a {
   grid-template-columns: repeat(3, auto);
   background-color: $primary-color;
 
+  &.inactive {
+    opacity: 0.5;
+  }
+
+  &.x.active .cell:not(.x):not(.o):hover:before {
+    font-family: 'Material Icons';
+    content: 'close';
+    color: $light-green;
+    font-size: $game--cell-font-size;
+  }
+
+  &.o.active .cell:not(.x):not(.o):hover:before {
+    font-family: 'Material Icons';
+    content: 'radio_button_unchecked';
+    color: $light-blue;
+    font-size: calc($game--cell-font-size * 0.7);
+  }
+
+  &.active .cell {
+    cursor: pointer;
+  }
+
   .cell {
     display: flex;
     justify-content: center;
@@ -141,7 +173,6 @@ a {
     height: $game--cell-width;
     max-width: $game--cell-max-width;
     max-height: $game--cell-max-width;
-    cursor: pointer;
   }
 
   .cell.x:before {

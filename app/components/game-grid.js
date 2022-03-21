@@ -2,31 +2,31 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { A } from '@ember/array';
-
 export default class GameGridComponent extends Component {
   @tracked nowPlaying = 'x';
-  @tracked grid = new Array(9).fill('');
   @tracked status = `Current turn:`;
   @tracked gameActive = true;
-  // @tracked grid = A([]);
-  // @tracked grid = ['x']
+  @tracked grid = A(['', '', '', '', '', '', '', '', '']);
+  @tracked restartable = !this.grid.every((e) => e === '');
 
   @action click() {
     const cell = event.target;
-    const statusElement = document.getElementsByClassName('game--status');
+    const cellId = cell.dataset.cellId;
+
     // Start new game if clicked when previous game had been completed
     if (!this.gameActive) {
       this.nowPlaying = 'x';
-      this.grid = new Array(9).fill('');
+      this.grid = A(['', '', '', '', '', '', '', '', '']);
       this.status = `Current turn:`;
       this.gameActive = true;
+      return;
     }
 
     // Return if clicked element isn't a cell
     if (!cell.classList.contains('cell')) return;
 
-    // Return if cell isn't empty
-    if (['x', 'o'].some((el) => cell.classList.contains(el))) return;
+    // Return if cell already contains x/o
+    if (this.grid[cellId]) return;
 
     // Grid array win conditions
     const winConditions = [
@@ -40,38 +40,35 @@ export default class GameGridComponent extends Component {
       [0, 4, 8],
     ];
 
-    // Display x/o in clicked cell
-    cell.classList.add(this.nowPlaying);
+    // Update grid to contain x/o
     this.grid[cell.dataset.cellId] = this.nowPlaying;
-    console.log(this.grid);
+    this.grid = this.grid;
 
     // Check win
-    for (let i = 0; i < winConditions.length; i++) {
-      const winCondition = winConditions[i];
-      let cellA = this.grid[winCondition[0]];
-      let cellB = this.grid[winCondition[1]];
-      let cellC = this.grid[winCondition[2]];
+    winConditions.some((winCondition) => {
+      const cellA = this.grid[winCondition[0]];
+      const cellB = this.grid[winCondition[1]];
+      const cellC = this.grid[winCondition[2]];
       if (cellA === '' || cellB === '' || cellC === '') {
-        continue;
+        return false;
       }
       if (cellA === cellB && cellB === cellC) {
-        console.log(`${this.nowPlaying} won!`);
-        this.status = `The winner is`;
-        this.gameActive = false;
+        this.status = `Congratulations! The winner is`;
+        this.gameActive = !this.gameActive;
+        return true;
       }
-    }
+    });
 
     // Check draw
-    if (!this.gameActive) return;
-
     if (!this.grid.includes('')) {
-      this.status = `It's a draw babes`;
+      this.status = `It's a draw...`;
       this.nowPlaying = 'draw';
-      this.gameActive = false;
+      this.gameActive = !this.gameActive;
       return;
     }
 
-    // Switch to next player
+    // Switch to next player if no win or draw
+    if (!this.gameActive) return;
     this.nowPlaying === 'x' ? (this.nowPlaying = 'o') : (this.nowPlaying = 'x');
   }
 }
