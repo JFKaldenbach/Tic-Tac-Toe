@@ -2,7 +2,6 @@ import Model from '@ember-data/model';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { A } from '@ember/array';
-import { v4 as uuidv4 } from 'uuid';
 import { service } from '@ember/service';
 
 export default class GameModel extends Model {
