@@ -5,19 +5,11 @@
   <li>You are X, your friend is O. Players take turns putting their marks in
     empty squares.</li>
 
-  <li>The first player to get 3 of her marks in a row (up, down, across, or
+  <li>The first player to get 3 of their marks in a row (up, down, or
     diagonally) is the winner.</li>
 
-  <li>When all 9 squares are full, the game is over. If no player has 3 marks in
-    a row, the game ends in a tie.</li>
+  <li>When all 9 squares are full and no player has 3 marks in a row, the game
+    ends in a draw.</li>
 </ol>
 
-<LinkTo @route='index'>
-  <div class='mdc-touch-target-wrapper'>
-    <button class='mdc-button mdc-button--touch back' type='button'>
-      <span class='mdc-button__ripple'></span>
-      <span class='mdc-button__touch'></span>
-      <span class='mdc-button__label'>Back to game</span>
-    </button>
-  </div>
-</LinkTo>
+<Button @route='game' class='back'>Play now</Button>

@@ -8,7 +8,7 @@
 $min-width: 15vh;
 $max-width: 30vw;
 
-$background-color: #eee;
+$background-color: #fff;
 $primary-color: #2d2d2d;
 $primary-font: 'Roboto', sans-serif;
 $green: #2e7d32;
@@ -18,15 +18,16 @@ $light-blue: #20479b5d;
 $white: #fff;
 $grey: #0000001f;
 $darkgrey: #00000042;
+$seethrough-white: rgb(255, 255, 255, 0.9);
 
+$game--gap: 3px;
 $game--cell-width: $min-width;
 $game--cell-max-width: $max-width;
-$game--gap: 5px;
 $game--cell-font-size: min($min-width, $max-width);
 
 $content--width: calc(3 * min($min-width, $max-width) + 2 * $game--gap);
 
-$game--cell-background: #eee;
+$game--cell-background: $background-color;
 $game--grid-color: $primary-color;
 
 *,
@@ -35,6 +36,7 @@ $game--grid-color: $primary-color;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  border: 0;
 }
 
 body {
@@ -52,10 +54,13 @@ body {
 
 h1 {
   font-size: 2em;
+  line-height: 1.5em;
+  font-weight: 100;
+  color: $green;
 }
 
 h2 {
-  font-weight: normal;
+  font-weight: 100;
 }
 
 a {
@@ -74,8 +79,13 @@ a {
     color: $primary-color;
   }
 
-  > div {
+  .width-15 {
     width: 15%;
+    display: flex;
+  }
+
+  .width-70 {
+    width: 70%;
     display: flex;
   }
 
@@ -83,9 +93,8 @@ a {
     justify-content: flex-start;
   }
 
-  .title {
+  .menu-center {
     justify-content: center;
-    width: 70%;
     left: 0;
     right: 0;
   }
@@ -116,7 +125,7 @@ a {
   .game--status.x:after {
     content: 'close';
     color: $green;
-    vertical-align: bottom;
+    vertical-align: middle;
   }
 
   .game--status.o:after {
@@ -126,129 +135,120 @@ a {
   }
 
   ol {
-    padding: 1em;
+    padding: 0px 1em;
 
     li {
       padding: 10px 0px;
     }
   }
-}
 
-.game--grid {
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  gap: $game--gap;
-  grid-template-columns: repeat(3, auto);
-  background-color: $primary-color;
-
-  &.inactive {
-    opacity: 0.5;
-  }
-
-  &.x.active .cell:not(.x):not(.o):hover:before {
-    font-family: 'Material Icons';
-    content: 'close';
-    color: $light-green;
-    font-size: $game--cell-font-size;
-  }
-
-  &.o.active .cell:not(.x):not(.o):hover:before {
-    font-family: 'Material Icons';
-    content: 'radio_button_unchecked';
-    color: $light-blue;
-    font-size: calc($game--cell-font-size * 0.7);
-  }
-
-  &.active .cell {
-    cursor: pointer;
-  }
-
-  .cell {
-    display: flex;
+  .game--grid {
+    display: grid;
     justify-content: center;
-    align-items: center;
-    background-color: $game--cell-background;
-    width: $game--cell-width;
-    height: $game--cell-width;
-    max-width: $game--cell-max-width;
-    max-height: $game--cell-max-width;
+    align-content: center;
+    gap: $game--gap;
+    padding: $game--gap;
+    box-shadow: 0 2px 3px 1px rgb(0 0 0 / 15%);
+    grid-template-columns: repeat(3, auto);
+    background-color: $primary-color;
+
+    &.inactive {
+      opacity: 0.5;
+    }
+
+    &.x.active .cell:not(.x):not(.o):hover:before {
+      font-family: 'Material Icons';
+      content: 'close';
+      color: $light-green;
+      font-size: $game--cell-font-size;
+    }
+
+    &.o.active .cell:not(.x):not(.o):hover:before {
+      font-family: 'Material Icons';
+      content: 'radio_button_unchecked';
+      color: $light-blue;
+      font-size: calc($game--cell-font-size * 0.7);
+    }
+
+    &.active .cell {
+      cursor: pointer;
+    }
+
+    .cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $game--cell-background;
+      width: $game--cell-width;
+      height: $game--cell-width;
+      max-width: $game--cell-max-width;
+      max-height: $game--cell-max-width;
+    }
+
+    .cell.x:before {
+      font-family: 'Material Icons';
+      content: 'close';
+      color: $green;
+      font-size: $game--cell-font-size;
+    }
+
+    .cell.o:before {
+      font-family: 'Material Icons';
+      content: 'radio_button_unchecked';
+      color: $blue;
+      font-size: calc($game--cell-font-size * 0.7);
+    }
   }
 
-  .cell.x:before {
-    font-family: 'Material Icons';
-    content: 'close';
-    color: $green;
-    font-size: $game--cell-font-size;
-  }
-
-  .cell.o:before {
-    font-family: 'Material Icons';
-    content: 'radio_button_unchecked';
-    color: $blue;
-    font-size: calc($game--cell-font-size * 0.7);
-  }
-}
-
-button {
-  font-family: $primary-font;
-  cursor: pointer;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  border: none;
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-size: 0.7em;
-  letter-spacing: 0.09em;
-  padding: 10px 16px;
-  background-color: $green;
-  color: $white;
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
-    0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
-
-  span {
+  a button.button {
+    font-family: $primary-font;
+    cursor: pointer;
+    font-weight: 600;
     text-decoration: none;
+    display: inline-flex;
+    border: none;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-size: 0.7em;
+    letter-spacing: 0.09em;
+    padding: 10px 16px;
+    background-color: $green;
+    color: $seethrough-white;
+    transition: 0.2s ease-in-out;
+
+    &.restart {
+      display: flex;
+      border-radius: 100%;
+      font-size: 1em;
+      text-transform: none;
+      height: auto;
+      padding: 16px;
+
+      &:before {
+        font-family: 'Material Icons';
+        content: 'replay';
+      }
+    }
+
+    &.back {
+      &:before {
+        font-family: 'Material Icons';
+        content: 'arrow_back';
+        text-transform: none;
+        padding-right: 10px;
+      }
+    }
+
+    &:hover {
+      color: $white;
+      box-shadow: 0px 0px 10px 0px $green;
+    }
+    span {
+      text-decoration: none;
+    }
   }
 }
 
-button.restart {
-  display: flex;
-  border-radius: 100%;
-  font-size: 1em;
-  text-transform: none;
-  height: auto;
-  padding: 16px;
-
-  &:before {
-    font-family: 'Material Icons';
-    content: 'replay';
-  }
-
-  &:hover {
-    transition-duration: 1s;
-    transform: rotate(-360deg);
-  }
-}
-
-button.restart.inactive {
-  background-color: $grey;
-  color: $darkgrey;
-  cursor: default;
-
-  &:hover {
-    transform: none;
-  }
-}
-
-button.back {
-  &:before {
-    font-family: 'Material Icons';
-    content: 'arrow_back';
-    text-transform: none;
-    padding-right: 10px;
-  }
-}
 .footer {
   display: flex;
   font-size: 0.8em;

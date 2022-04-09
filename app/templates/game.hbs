@@ -1,0 +1,33 @@
+<h2
+  class='game--status {{this.model.nowPlaying}}'
+  data-test-game--status='{{this.model.nowPlaying}}'
+>{{this.model.status}} </h2>
+{{!-- {{#if this.model.gameActive}}{{else}}
+  <Button class='save'>Save this game</Button>
+{{/if}} --}}
+{{! template-lint-disable no-invalid-interactive }}
+<div
+  class='game--grid
+    {{this.model.nowPlaying}}
+    {{if this.model.gameActive "active" "inactive"}}'
+  {{on 'click' this.model.gridClick}}
+  data-test-game--grid
+  data-test-game--grid-status='{{this.model.nowPlaying}}'
+  data-test-game--grid-active='{{if this.model.gameActive "active" "inactive"}}'
+>
+
+  {{#each this.model.grid as |cell index|}}
+    <div
+      data-test-cell-id='{{index}}'
+      data-test-cell-status='{{cell}}'
+      data-cell-id='{{index}}'
+      class='cell {{cell}}'
+    ></div>
+
+  {{/each}}
+</div>
+<Button
+  class='restart'
+  data-test-button-restart
+  {{on 'click' this.model.restart}}
+/>

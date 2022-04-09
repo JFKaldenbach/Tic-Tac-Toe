@@ -1,29 +1,31 @@
-import Component from '@glimmer/component';
+import Model from '@ember-data/model';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { A } from '@ember/array';
-export default class GameGridComponent extends Component {
+import { v4 as uuidv4 } from 'uuid';
+import { service } from '@ember/service';
+
+export default class GameModel extends Model {
+  @service store;
+  @service games;
+  @tracked grid = A(['', '', '', '', '', '', '', '', '']);
   @tracked nowPlaying = 'x';
   @tracked status = `Current turn:`;
   @tracked gameActive = true;
-  @tracked grid = A(['', '', '', '', '', '', '', '', '']);
-  @tracked restartable = !this.grid.every((e) => e === '');
 
-  @action click() {
-    const cell = event.target;
-    const cellId = cell.dataset.cellId;
-
-    // Start new game if clicked when previous game had been completed
+  @action gridClick() {
+    // Restart game if gameActive is false
     if (!this.gameActive) {
-      this.nowPlaying = 'x';
-      this.grid = A(['', '', '', '', '', '', '', '', '']);
-      this.status = `Current turn:`;
-      this.gameActive = true;
+      this.restart();
       return;
     }
 
+    const cell = event.target.closest('.cell');
+
     // Return if clicked element isn't a cell
-    if (!cell.classList.contains('cell')) return;
+    if (!cell) return;
+
+    const cellId = cell.dataset.cellId;
 
     // Return if cell already contains x/o
     if (this.grid[cellId]) return;
@@ -42,7 +44,13 @@ export default class GameGridComponent extends Component {
 
     // Update grid to contain x/o
     this.grid[cell.dataset.cellId] = this.nowPlaying;
-    this.grid = this.grid;
+    this.grid = [...this.grid];
+
+    console.log(this.grid, this.nowPlaying, this.status, this.gameActive);
+    // this.games.add('hey');
+    // this.store.createRecord('savedGame', {
+    //   grid: A(['test']),
+    // });
 
     // Check win
     winConditions.some((winCondition) => {
@@ -53,22 +61,31 @@ export default class GameGridComponent extends Component {
         return false;
       }
       if (cellA === cellB && cellB === cellC) {
-        this.status = `Congratulations! The winner is`;
-        this.gameActive = !this.gameActive;
+        this.status = `The winner is`;
+        this.gameActive = false;
         return true;
       }
     });
 
     // Check draw
+    if (!this.gameActive) return;
     if (!this.grid.includes('')) {
       this.status = `It's a draw...`;
       this.nowPlaying = 'draw';
-      this.gameActive = !this.gameActive;
+      this.gameActive = false;
       return;
     }
 
     // Switch to next player if no win or draw
     if (!this.gameActive) return;
     this.nowPlaying === 'x' ? (this.nowPlaying = 'o') : (this.nowPlaying = 'x');
+  }
+
+  @action restart() {
+    this.nowPlaying = 'x';
+    this.grid = A(['', '', '', '', '', '', '', '', '']);
+    this.status = `Current turn:`;
+    this.gameActive = true;
+    return;
   }
 }
