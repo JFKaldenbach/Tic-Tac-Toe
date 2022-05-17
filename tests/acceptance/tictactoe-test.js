@@ -33,7 +33,7 @@ module('Acceptance | tictactoe', function (hooks) {
       .exists('x renders in top left cell');
     assert
       .dom('[data-test-cell-id="0"]')
-      .hasClass('x', 'top left cell gets correct class after click("x")');
+      .hasClass('x', 'top left cell gets correct class after click: "x"');
 
     await visit('/game');
     await click('[data-test-cell-id="0"]');
@@ -51,12 +51,12 @@ module('Acceptance | tictactoe', function (hooks) {
     assert
       .dom('[data-test-game--status]')
       .exists('board becomes inactive after completed game');
-    await click('[data-test-game--grid]');
+    await click('[data-test-cell-id="6"]');
     assert
       .dom('[data-test-game--status]')
       .containsText(
         'Current',
-        'board resets after clicking on inactive/played board'
+        'board resets after clicking on cell in inactive board'
       );
 
     await visit('/game');
